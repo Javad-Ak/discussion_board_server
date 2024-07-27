@@ -6,10 +6,6 @@ from django.core.exceptions import ValidationError
 from django.db import models
 import uuid
 
-from discussion_board import settings
-
-DEFAULT_AVATAR = settings.STATIC_ROOT / 'avatars' / 'default_avatar.png'
-
 
 def validatePhone(value):
     if value and not re.match(r'^(\+98|0)?9\d{9}$', value):
@@ -27,17 +23,19 @@ class UserManager(BasicUserManager):
         if not username:
             raise ValueError('you must provide a username.')
 
-        if extra_fields['is_superuser'] is False:
+        if extra_fields.get('is_superuser') is False:
             if not extra_fields['email']:
                 raise ValueError('you must provide an email.')
 
-            if not extra_fields['first_name']:
+            if not extra_fields.get('first_name'):
                 raise ValueError('you must provide a first name.')
 
-            if not extra_fields['last_name']:
+            if not extra_fields.get('last_name'):
                 raise ValueError('you must provide a last name.')
 
-        extra_fields['email'] = self.normalize_email(extra_fields['email'])
+        if email := extra_fields.get('email'):
+            extra_fields['email'] = self.normalize_email(email)
+
         user = super().create_user(self, username, password=password, **extra_fields)
         user.set_password(password)
         user.save()
@@ -64,6 +62,8 @@ class User(AbstractBaseUser):
     first_name = models.CharField(max_length=150, blank=True)
     last_name = models.CharField(max_length=150, blank=True)
     is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    is_superuser = models.BooleanField(default=False)
 
     # additional
     phone_number = models.CharField(validators=[validatePhone], max_length=32, blank=True)
@@ -72,7 +72,7 @@ class User(AbstractBaseUser):
     create_date = models.DateTimeField(auto_now_add=True)
 
     # settings
-    objects = UserManager
+    objects = UserManager()
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
 
@@ -83,8 +83,6 @@ class User(AbstractBaseUser):
         return f"{self.first_name} {self.last_name}"
 
     def save(self, *args, **kwargs):
-        if not self.avatar:
-            self.profile = DEFAULT_AVATAR
         if self.email:
             self.email = self.email.lower()
         super().save(*args, **kwargs)
