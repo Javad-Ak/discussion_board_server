@@ -36,7 +36,7 @@ class UserManager(BasicUserManager):
         if email := extra_fields.get('email'):
             extra_fields['email'] = self.normalize_email(email)
 
-        user = super().create_user(self, username, password=password, **extra_fields)
+        user = super().create_user(username=username, password=password, **extra_fields)
         user.set_password(password)
         user.save()
         return user
@@ -50,7 +50,7 @@ class UserManager(BasicUserManager):
         if extra_fields.get("is_superuser") is False:
             raise ValueError("Superuser must have is_superuser=True.")
 
-        return self.create_user(username, password, **extra_fields)
+        return self.create_user(username=username, password=password, **extra_fields)
 
 
 class User(AbstractBaseUser):
@@ -61,9 +61,9 @@ class User(AbstractBaseUser):
     email = models.EmailField(unique=True, blank=True)
     first_name = models.CharField(max_length=150, blank=True)
     last_name = models.CharField(max_length=150, blank=True)
+    is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    is_superuser = models.BooleanField(default=False)
 
     # additional
     phone_number = models.CharField(validators=[validatePhone], max_length=32, blank=True)
