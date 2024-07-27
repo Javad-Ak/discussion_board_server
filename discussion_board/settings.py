@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 
-from accounts.models import User
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -29,21 +27,26 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Custom
-AUTH_USER_MODEL = User
+AUTH_USER_MODEL = 'accounts.User'
 LOGIN_URL = 'accounts:login'
 
 STATIC_ROOT = BASE_DIR / 'static'
+STATIC_URL = 'static/'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 if DEBUG:
-    MEDIA_URL = 'media/'
     MEDIA_ROOT = BASE_DIR / 'media'
+    MEDIA_URL = 'media/'
 
 # Application definition
 
 INSTALLED_APPS = [
     # Custom
-    'accounts'
-    'discussions'
+    'accounts',
+    'discussions',
+
+    'rest_framework',
 
     # Default
     'django.contrib.admin',
@@ -123,13 +126,3 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.0/howto/static-files/
-
-STATIC_URL = 'static/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
