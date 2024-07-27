@@ -1,5 +1,5 @@
 from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.models import UserManager as BasicUserManager
+from django.contrib.auth.models import UserManager as BasicUserManager, PermissionsMixin, AbstractUser
 import re
 
 from django.core.exceptions import ValidationError
@@ -53,36 +53,14 @@ class UserManager(BasicUserManager):
         return self.create_user(username=username, password=password, **extra_fields)
 
 
-class User(AbstractBaseUser):
-    """ Custom user model """
-    # basis
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    username = models.CharField(unique=True, max_length=150)
-    email = models.EmailField(unique=True, blank=True)
-    first_name = models.CharField(max_length=150, blank=True)
-    last_name = models.CharField(max_length=150, blank=True)
-    is_superuser = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-
-    # additional
+class User(AbstractUser):
+    """ Custom user model with additional fields """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, auto_created=True)
     phone_number = models.CharField(validators=[validatePhone], max_length=32, blank=True)
     avatar = models.ImageField(validators=[validateAvatar], upload_to='avatars/', blank=True)
     bio = models.TextField(max_length=500, blank=True)
-    create_date = models.DateTimeField(auto_now_add=True)
 
     # settings
     objects = UserManager()
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
-
-    def __str__(self):
-        return self.username
-
-    def get_full_name(self):
-        return f"{self.first_name} {self.last_name}"
-
-    def save(self, *args, **kwargs):
-        if self.email:
-            self.email = self.email.lower()
-        super().save(*args, **kwargs)
