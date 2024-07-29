@@ -41,7 +41,7 @@ class CommentListCreateView(mixins.CreateModelMixin, mixins.ListModelMixin, gene
     def get_permissions(self):
         if self.request.method == 'GET':
             return [AllowAny]
-        elif self.request.method == 'POST':
+        else:
             return [IsAuthenticated]
 
 
@@ -52,5 +52,5 @@ class CommentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     def get_permissions(self):
         if self.request.method == 'GET':
             return [AllowAny]
-        elif:
+        else:
             return [IsOwner]

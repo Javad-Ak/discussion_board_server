@@ -104,10 +104,16 @@ WSGI_APPLICATION = 'discussion_board.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
+    # default db
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    },
+
+    # # test db
+    # 'test': {
+    #     'NAME': BASE_DIR / 'test_db.sqlite3',
+    # }
 }
 
 # Password validation

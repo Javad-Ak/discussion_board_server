@@ -1,7 +1,5 @@
-from rest_framework import viewsets, mixins, status, views
-from rest_framework.permissions import AllowAny, IsAuthenticated, BasePermission
-from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework import viewsets, mixins
+from rest_framework.permissions import AllowAny, BasePermission
 
 from . import serializers
 from .models import User
@@ -15,20 +13,6 @@ class HasSamePK(BasePermission):
             return request.user is not None and request.user.pk == obj.pk
         except AttributeError:
             return False
-
-
-class LogoutView(views.APIView):
-    """
-    logs out the user from all systems.
-    Run 'python manage.py flushexpiredtokens' on a daily basis.
-    """
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        refresh_token = request.data["refresh"]
-        token = RefreshToken(refresh_token)
-        token.blacklist()
-        return Response("Successful Logout", status=status.HTTP_200_OK)
 
 
 class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,
