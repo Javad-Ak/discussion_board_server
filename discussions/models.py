@@ -18,6 +18,7 @@ class Topic(models.Model):
 
 
 class Comment(models.Model):
+    """ Comment base model """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
