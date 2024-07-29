@@ -36,9 +36,9 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    }
+    )
 }
 
 SIMPLE_JWT = {
@@ -109,11 +109,6 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     },
-
-    # # test db
-    # 'test': {
-    #     'NAME': BASE_DIR / 'test_db.sqlite3',
-    # }
 }
 
 # Password validation

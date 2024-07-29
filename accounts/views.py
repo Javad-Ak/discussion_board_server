@@ -1,5 +1,5 @@
 from rest_framework import viewsets, mixins
-from rest_framework.permissions import AllowAny, BasePermission
+from rest_framework.permissions import AllowAny, BasePermission, IsAuthenticated
 
 from . import serializers
 from .models import User
@@ -22,12 +22,14 @@ class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.Destr
 
     def get_serializer_class(self):
         if self.action == 'create':
-            return serializers.UserRegistrationSerializer
+            serializer_class = serializers.UserRegistrationSerializer
         else:
-            return serializers.UserSerializer
+            serializer_class = serializers.UserSerializer
+        return serializer_class
 
     def get_permissions(self):
         if self.action in ('create', 'retrieve'):
-            return [AllowAny]
+            permission_classes = [AllowAny]
         else:
-            return [HasSamePK]
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
