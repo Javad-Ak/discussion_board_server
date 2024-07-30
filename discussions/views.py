@@ -19,6 +19,7 @@ class IsOwner(BasePermission):
 
 class TopicViewSet(viewsets.ModelViewSet):
     """topic view set: list, create, update, partial_update, destroy, retrieve"""
+    model = Topic
     queryset = Topic.objects.all()
     serializer_class = TopicSerializer
 
@@ -31,8 +32,7 @@ class TopicViewSet(viewsets.ModelViewSet):
             return [IsOwner]
 
 
-class CommentListCreateView(viewsets.ModelViewSet):
-    """comment view set: list, create, update, partial_update, destroy, retrieve"""
+class CommentListCreateView(generics.ListCreateAPIView):
     serializer_class = CommentSerializer
 
     def get_queryset(self):
@@ -40,9 +40,24 @@ class CommentListCreateView(viewsets.ModelViewSet):
         return self.queryset
 
     def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
-            return [AllowAny]
-        elif self.action == 'create':
-            return [IsAuthenticated]
+        if self.request.method == 'GET':
+            self.permission_classes = [AllowAny]
         else:
-            return [IsOwner]
+            self.permission_classes = [IsAuthenticated]
+        return [permission() for permission in self.permission_classes]
+
+
+class CommentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        self.queryset = Comment.objects.all().filter(topic_id=self.kwargs.get('topic_id'))
+        return self.queryset
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            self.permission_classes = [AllowAny]
+        else:
+            self.permission_classes = [IsOwner]
+        return [permission() for permission in self.permission_classes]
