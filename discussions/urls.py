@@ -9,5 +9,5 @@ router.register('topics', views.TopicViewSet, 'discussions')
 
 urlpatterns = [
                   path('topics/<int:pk>/comments/', views.CommentListCreateView.as_view(), name='comments'),
-                  path('comment/<int:topic_pk>/', views.CommentRetrieveUpdateDestroyView.as_view(), name='comment'),
+                  path('comment/<int:topic_id>/', views.CommentRetrieveUpdateDestroyView.as_view(), name='comment'),
               ] + router.urls

@@ -7,11 +7,6 @@ from django.db import models
 import uuid
 
 
-def validatePhone(value):
-    if value and not re.match(r'^(\+98|0)?9\d{9}$', value):
-        raise ValidationError("Phone number must be entered in the format: '+98----------' or '09---------'.")
-
-
 def validateAvatar(value):
     if value and value.size > 1000000:
         raise ValidationError("Avatar image must be up to 1MB.")
@@ -56,9 +51,7 @@ class UserManager(BasicUserManager):
 class User(AbstractUser):
     """ Custom user model with additional fields """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, auto_created=True)
-    phone_number = models.CharField(validators=[validatePhone], max_length=32, blank=True)
     avatar = models.ImageField(validators=[validateAvatar], upload_to='avatars/', blank=True)
-    bio = models.TextField(max_length=500, blank=True)
 
     # settings
     objects = UserManager()

@@ -1,15 +1,15 @@
+from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-
 from .models import User
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserPublicSerializer(serializers.ModelSerializer):
     """Serializer for the User model"""
 
     class Meta:
         model = User
-        exclude = ['password', 'is_superuser', 'is_staff', 'is_active', 'date_joined', 'last_login']
-        extra_kwargs = {'id': {'read_only': True}}
+        exclude = ['id', 'password', 'is_superuser', 'is_staff', 'is_active', 'date_joined', 'last_login', 'groups',
+                   'user_permissions', 'email']
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -17,8 +17,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'email', 'username', 'password']
-        extra_kwargs = {'password': {'write_only': True}, 'id': {'read_only': True}}
+        fields = ['first_name', 'last_name', 'email', 'username', 'password']
+        extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
         password = validated_data.pop('password', None)
@@ -27,3 +27,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    """Serializer for password change endpoint"""
+    old_password = serializers.CharField(required=True, validators=[validate_password])
+    new_password = serializers.CharField(required=True, validators=[validate_password])
