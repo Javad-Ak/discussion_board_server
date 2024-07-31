@@ -19,17 +19,20 @@ class IsOwner(BasePermission):
 
 class TopicViewSet(viewsets.ModelViewSet):
     """topic view set: list, create, update, partial_update, destroy, retrieve"""
-    model = Topic
     queryset = Topic.objects.all()
     serializer_class = TopicSerializer
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
-            return [AllowAny]
+            self.permission_classes = [AllowAny]
         elif self.action == 'create':
-            return [IsAuthenticated]
+            self.permission_classes = [IsAuthenticated]
         else:
-            return [IsOwner]
+            self.permission_classes = [IsOwner]
+        return [permission() for permission in self.permission_classes]
+
+    def perform_create(self, serializer):
+        return serializer.save(owner_id=self.request.user.pk)
 
 
 class CommentListCreateView(generics.ListCreateAPIView):
@@ -45,6 +48,9 @@ class CommentListCreateView(generics.ListCreateAPIView):
         else:
             self.permission_classes = [IsAuthenticated]
         return [permission() for permission in self.permission_classes]
+
+    def perform_create(self, serializer):
+        return serializer.save(owner_id=self.request.user.pk, topic_id=self.kwargs.get('topic_id'))
 
 
 class CommentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
