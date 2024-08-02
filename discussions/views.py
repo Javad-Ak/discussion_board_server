@@ -1,5 +1,5 @@
 from django.contrib.auth.models import AnonymousUser
-from rest_framework import viewsets, mixins, generics
+from rest_framework import viewsets, generics
 from rest_framework.permissions import BasePermission
 
 from discussions.models import Topic, Comment
