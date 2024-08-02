@@ -13,18 +13,16 @@ jobs:
       - restore_cache:
           key: venv
       - run:
+          name: build and test
           command: |
             python -m venv .venv
             source .venv/bin/activate
             pip install -r requirements.txt
+            python manage.py test
       - save_cache:
           key: venv
           paths:
             - ".venv"
-      - run:
-          name: Running tests
-          command: |
-            python manage.py test
 
 workflows:
   main:
