@@ -14,8 +14,10 @@ Discussion Board is a simple django restful API.
 
 ## Installation
 
-Build the Dockerfile and run it.
-
+Build a local python .venv OR use the Dockerfile and run a container:
+```
+sudo docker run -p 8000:8000 <container>
+```
 ## Features
 
 1. User Management
@@ -27,8 +29,8 @@ Build the Dockerfile and run it.
     - Add or remove comments.
 
 3. Tests and CI/CD
-    - API testcase and doc
-    - Dockerfile
+    - API testcase and doc at /api/docs
+    - Dockerfile and CircleCi config
 
 ## Technologies
 
