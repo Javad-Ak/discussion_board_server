@@ -7,7 +7,7 @@ from django.db import models
 import uuid
 
 
-def validateAvatar(value):
+def validate_avatar(value):
     if value and value.size > 1000000:
         raise ValidationError("Avatar image must be up to 1MB.")
 
@@ -51,7 +51,7 @@ class UserManager(BasicUserManager):
 class User(AbstractUser):
     """ Custom user model with additional fields """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, auto_created=True)
-    avatar = models.ImageField(validators=[validateAvatar], upload_to='avatars/', blank=True)
+    avatar = models.ImageField(validators=[validate_avatar], upload_to='avatars/', blank=True)
 
     # settings
     objects = UserManager()

@@ -20,7 +20,6 @@ class IsSamePerson(BasePermission):
 
 class UserViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin, mixins.DestroyModelMixin,
                   viewsets.GenericViewSet):
-    """User management view"""
     queryset = User.objects.all()
     serializer_class = serializers.UserPublicSerializer
     lookup_field = 'username'
@@ -33,7 +32,7 @@ class UserViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin, mixins.Des
         return [permission() for permission in self.permission_classes]
 
     @action(methods=['POST'], detail=False, permission_classes=[IsSamePerson])
-    def password(self, request):
+    def change_password(self, request):
         user = request.user
         self.check_object_permissions(request, user)
 
@@ -50,25 +49,12 @@ class UserViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin, mixins.Des
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-class SignupView(generics.GenericAPIView):
-    permission_classes = []
-    serializer_class = serializers.UserRegistrationSerializer
-
-    def post(self, request):
-        # TODO: email recovery
-        serializer = self.serializer_class(data=request.data)
+    @action(methods=['POST'], detail=False, permission_classes=[])
+    def signup(self, request):
+        # email verification not implemented
+        serializer = serializers.UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class AccountRecoveryView(generics.GenericAPIView):
-    permission_classes = []
-    serializer_class = serializers.UserRegistrationSerializer
-
-    def post(self, request):
-        # TODO: email recovery
-        pass

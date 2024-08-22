@@ -36,10 +36,10 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('accounts.urls')),
-    path('', include('discussions.urls')),
-    path('docs<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('api/', include('accounts.urls')),
+    path('api/', include('discussions.urls')),
+    path('api/docs<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('api/docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
 
 if settings.DEBUG:

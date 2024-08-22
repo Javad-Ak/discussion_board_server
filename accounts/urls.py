@@ -11,9 +11,7 @@ router.register('users', views.UserViewSet, 'users')
 
 urlpatterns = [
                   # flush expired tokens on a daily basis.
-                  path('signup/', views.SignupView.as_view(), name='signup'),
-                  path('login/', TokenObtainPairView.as_view(), name='login'),
-                  path('login/refresh/', TokenRefreshView.as_view(), name='refresh_token'),
-                  path('logout/', token_blacklist, name='logout'),
-                  path('account-recovery/', views.AccountRecoveryView.as_view(), name='recovery'),
+                  path('users/login/', TokenObtainPairView.as_view(), name='login'),
+                  path('users/login/refresh/', TokenRefreshView.as_view(), name='refresh_token'),
+                  path('users/logout/', token_blacklist, name='logout'),
               ] + router.urls

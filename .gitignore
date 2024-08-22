@@ -4,9 +4,7 @@ media/
 *.sqlite3
 
 ### IntelliJ IDEA ###
-*.iws
-*.iml
-*.ipr
+.idea/
 
 ### Eclipse ###
 .apt_generated
