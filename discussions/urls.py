@@ -12,4 +12,5 @@ urlpatterns = router.urls + [
          views.CommentListCreateView.as_view(), name='comments_list'),
     path('topics/<int:topic_id>/comments/<int:pk>/',
          views.CommentRetrieveUpdateDestroyView.as_view(), name='comments_detail'),
+    path('search/<str:query>/', views.SearchView.as_view(), name='search'),
 ]
