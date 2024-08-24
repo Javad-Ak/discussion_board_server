@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-o3pso%st=yvjdzg_tz$m@%9g49cfy!!po+0y42)0zy%46my(bg
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost']
+ALLOWED_HOSTS = ['localhost']
 
 # Custom
 AUTH_USER_MODEL = 'accounts.User'
@@ -36,6 +36,9 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
@@ -61,7 +64,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
 
-    # Default
+    # Default: required for admin site
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
