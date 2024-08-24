@@ -52,6 +52,7 @@ class User(AbstractUser):
     """ Custom user model with additional fields """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, auto_created=True)
     avatar = models.ImageField(validators=[validate_avatar], upload_to='avatars/', blank=True)
+    bio = models.TextField(blank=True)
 
     # settings
     objects = UserManager()
