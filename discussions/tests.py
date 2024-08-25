@@ -31,7 +31,6 @@ class DiscussionTestCase(APITestCase):
 
         response = self.client.get("/api/search/te/")
         self.assertTrue(response.status_code // 100 == 2, "Topics searching failed: " + str(response.status_code))
-        print(response.data)
 
     def test_comment(self):
         response = self.client.get(self.base_url + str(self.topic.pk) + "/comments/")
