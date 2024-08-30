@@ -5,19 +5,21 @@ from discussions.models import Topic, Comment
 
 class TopicSerializer(serializers.ModelSerializer):
     """Serializer for the Topic model"""
-    user = serializers.ReadOnlyField(source='owner.username')
+    username = serializers.ReadOnlyField(source='owner.username')
+    avatar = serializers.ImageField(source='owner.avatar', read_only=True)
 
     class Meta:
         model = Topic
         exclude = ['owner']
-        extra_kwargs = {'pk': {'read_only': True}, 'owner': {'read_only': True}}
+        extra_kwargs = {'pk': {'read_only': True},}
 
 
 class CommentSerializer(serializers.ModelSerializer):
     """Serializer for the Comment model"""
-    user = serializers.ReadOnlyField(source='owner.username')
+    username = serializers.ReadOnlyField(source='owner.username')
+    avatar = serializers.ImageField(source='owner.avatar', read_only=True)
 
     class Meta:
         model = Comment
-        exclude = ['owner']
-        extra_kwargs = {'pk': {'read_only': True}, 'topic': {'read_only': True}}
+        exclude = ['owner', 'topic']
+        extra_kwargs = {'pk': {'read_only': True},}
