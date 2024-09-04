@@ -1,9 +1,11 @@
 target/
+venv/
 .venv/
 media/
 *.sqlite3
 .env
 env
+__pycache__
 
 ### IntelliJ IDEA ###
 .idea/
