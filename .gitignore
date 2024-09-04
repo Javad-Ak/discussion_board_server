@@ -2,6 +2,8 @@ target/
 .venv/
 media/
 *.sqlite3
+.env
+env
 
 ### IntelliJ IDEA ###
 .idea/
