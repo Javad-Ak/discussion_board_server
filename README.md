@@ -1,4 +1,4 @@
-# Discussion Board: django restful API
+# Discussion Board Server: django restful API
 
 ## Description
 
@@ -16,7 +16,7 @@ pip install -r requirements.txt
 Build local sqlite database and run the server:
 
 ```
-python manage.py makemigrations
+python manage.py makemigrations accounts discussions
 python manage.py migrate
 python manage.py runserver
 ```
