@@ -19,7 +19,7 @@ class IsOwner(BasePermission):
 
 class TopicViewSet(viewsets.ModelViewSet):
     """topic view set: list, create, update, partial_update, destroy, retrieve"""
-    queryset = Topic.objects.all()
+    queryset = Topic.objects.all().order_by('date_added').reverse()
     serializer_class = TopicSerializer
 
     def get_permissions(self):
@@ -39,7 +39,9 @@ class CommentListCreateView(generics.ListCreateAPIView):
     serializer_class = CommentSerializer
 
     def get_queryset(self):
-        self.queryset = Comment.objects.all().filter(topic_id=self.kwargs.get('topic_id'))
+        self.queryset = (Comment.objects.all()
+                         .filter(topic_id=self.kwargs.get('topic_id'))
+                         .order_by('date_added').reverse())
         return self.queryset
 
     def get_permissions(self):
@@ -54,11 +56,12 @@ class CommentListCreateView(generics.ListCreateAPIView):
 
 
 class CommentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
     def get_queryset(self):
-        self.queryset = Comment.objects.all().filter(topic_id=self.kwargs.get('topic_id'))
+        self.queryset = (Comment.objects.all()
+                         .filter(topic_id=self.kwargs.get('topic_id'))
+                         .order_by('date_added').reverse())
         return self.queryset
 
     def get_permissions(self):
@@ -67,3 +70,11 @@ class CommentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         else:
             self.permission_classes = [IsOwner]
         return [permission() for permission in self.permission_classes]
+
+
+class SearchView(generics.ListAPIView):
+    serializer_class = TopicSerializer
+
+    def get_queryset(self):
+        self.queryset = Topic.objects.filter(title__contains=self.kwargs.get('query')).order_by('date_added').reverse()
+        return self.queryset

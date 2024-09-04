@@ -29,6 +29,10 @@ class DiscussionTestCase(APITestCase):
                                      data={'title': 'test2', 'content': 'test'}, format='json')
         self.assertTrue(response.status_code // 100 == 2, "Topic update failed: " + str(response.status_code))
 
+        response = self.client.get("/api/search/te/")
+        self.assertTrue(response.status_code // 100 == 2, "Topics searching failed: " + str(response.status_code))
+        print(response.data)
+
     def test_comment(self):
         response = self.client.get(self.base_url + str(self.topic.pk) + "/comments/")
         self.assertTrue(response.status_code // 100 == 2, "Comment listing failed: " + str(response.status_code))

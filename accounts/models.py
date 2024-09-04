@@ -1,6 +1,5 @@
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import UserManager as BasicUserManager, PermissionsMixin, AbstractUser
-import re
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -8,8 +7,8 @@ import uuid
 
 
 def validate_avatar(value):
-    if value and value.size > 1000000:
-        raise ValidationError("Avatar image must be up to 1MB.")
+    if value and value.size > 2000000:
+        raise ValidationError("Avatar image must be up to 2MB.")
 
 
 class UserManager(BasicUserManager):
@@ -52,8 +51,12 @@ class User(AbstractUser):
     """ Custom user model with additional fields """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, auto_created=True)
     avatar = models.ImageField(validators=[validate_avatar], upload_to='avatars/', blank=True)
+    bio = models.TextField(blank=True)
 
     # settings
     objects = UserManager()
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
+
+    def __str__(self):
+        return self.username
