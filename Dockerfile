@@ -20,4 +20,4 @@ RUN pip install -r requirements.txt
 
 # You can also run "docker-compose exec django_app python manage.py migrate --noinput"
 RUN chmod +x ./scripts/entrypoint.sh
-ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+ENTRYPOINT ["./scripts/entrypoint.sh"]
