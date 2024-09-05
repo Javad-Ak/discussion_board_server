@@ -151,14 +151,13 @@ USE_I18N = True
 USE_TZ = True
 
 # Separated dev and prod settings
-if (DEBUG):
+if DEBUG:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         },
     }
-
 else:
     DATABASES = {
         'default': {
