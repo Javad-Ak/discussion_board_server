@@ -4,7 +4,7 @@ FROM python:3.11-alpine AS django_app
 ENV PYTHONDONTWRITEBYTECODE = 1
 ENV PYTHONUNBUFFERED = 1
 
-# Set the working directory in the container to /app
+# Set the working directory in the container to /django_app
 WORKDIR /django_app
 
 # Copy the current directory files (on your machine) to the container
@@ -18,7 +18,6 @@ RUN apk update \
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# make migrations
-RUN python manage.py makemigrations accounts discussions
-RUN python manage.py migrate
-# you can double check this by "docker-compose exec django_app python manage.py migrate --noinput"
+# You can also run "docker-compose exec django_app python manage.py migrate --noinput"
+RUN chmod +x ./scripts/entrypoint.sh
+ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
