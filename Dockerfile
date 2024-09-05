@@ -1,22 +1,24 @@
 # Use an official Python runtime as a parent image
-FROM python:3.10-slim
+FROM python:3.11-alpine AS django_app
 
 ENV PYTHONDONTWRITEBYTECODE = 1
 ENV PYTHONUNBUFFERED = 1
 
 # Set the working directory in the container to /app
-WORKDIR /app
+WORKDIR /django_app
 
-# Add the current directory files (on your machine) to the container
-ADD . /app/
+# Copy the current directory files (on your machine) to the container
+COPY . .
+
+#install pyscopg2 dependencies
+RUN apk update \
+    && apk add postgresql-dev gcc python3-dev musl-dev linux-headers
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# Expose the port server is running on
-EXPOSE 8000
-
-# Start the server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-
+# make migrations
+RUN python manage.py makemigrations accounts discussions
+RUN python manage.py migrate
+# you can double check this by "docker-compose exec django_app python manage.py migrate --noinput"
