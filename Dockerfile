@@ -6,13 +6,11 @@ ENV PYTHONUNBUFFERED = 1
 
 # Set the working directory in the container to /django_app
 WORKDIR /django_app
+RUN mkdir -p /django_app/static
+RUN mkdir -p /django_app/media
 
 # Copy the current directory files (on your machine) to the container
 COPY . .
-
-#install pyscopg2 dependencies
-RUN apk update \
-    && apk add postgresql-dev gcc python3-dev musl-dev linux-headers
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --upgrade pip

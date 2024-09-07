@@ -1,17 +1,6 @@
 #!/bin/sh
 
-if [ "$DATABASE" = "postgres" ]
-then
-    echo "Waiting for postgres..."
+python manage.py makemigrations accounts discussions
+python manage.py migrate
 
-    while ! nc -z $SQL_HOST $SQL_PORT; do
-      sleep 0.1
-    done
-
-    echo "PostgreSQL started"
-fi
-
-RUN python manage.py makemigrations accounts discussions
-RUN python manage.py migrate
-
-exec "$@"
+gunicorn --env DJANGO_SETTINGS_MODULE=discussion_board.settings discussion_board.wsgi:application --bind 0.0.0.0:8000
